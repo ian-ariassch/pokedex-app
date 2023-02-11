@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CardCatalog from './src/components/Catalog';
 import Header from './src/components/Header';
 import styled from 'styled-components/native';
-import { SearchTermContext } from './src/Contexts/SearchTerm';
+import { SearchTermContext } from './src/contexts/SearchTerm';
 import { ScrollView } from 'react-native';
 
 const StyledView = styled.View`

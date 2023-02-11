@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components/native';
-import { SearchTermContext } from '../../../Contexts/SearchTerm';
+import { SearchTermContext } from '../../../contexts/SearchTerm';
 
 const StyledSearchBar = styled.View`
     display: flex;

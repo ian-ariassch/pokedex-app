@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import PokemonCard  from './PokemonCard';
 import styled from 'styled-components/native';
 import axios from 'axios';
-import { SearchTermContext } from '../../Contexts/SearchTerm';
+import { SearchTermContext } from '../../contexts/SearchTerm';
 
 const Container = styled.View `
   display: flex;
