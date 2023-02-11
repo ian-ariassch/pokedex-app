@@ -1,20 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import CardCatalog from './src/components/Catalog';
+import Header from './src/components/Header';
+import styled from 'styled-components/native';
+import { SearchTermContext } from './src/Contexts/SearchTerm';
+import { ScrollView } from 'react-native';
+
+const StyledView = styled.View`
+  background-color: #A3A3A3;
+`
+
+const HeaderContainer = styled.View`
+  z-index: 10;
+`
+
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [searchTerm, setSearchTerm] = useState('');
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return(
+    <SearchTermContext.Provider value={{searchTerm, setSearchTerm}}>
+      <HeaderContainer>
+        <Header/>
+      </HeaderContainer>
+      <ScrollView>
+        <CardCatalog/>
+      </ScrollView>
+    </SearchTermContext.Provider>
+  )
+}
