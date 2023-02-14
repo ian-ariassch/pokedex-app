@@ -5,6 +5,7 @@ import axios from 'axios';
 import { SearchTermContext } from '../../contexts/SearchTerm';
 import { useQuery } from 'react-query';
 import { ActivityIndicator } from 'react-native';
+import { ScrollView } from 'react-native';
 
 const Container = styled.View `
   display: flex;
@@ -82,12 +83,14 @@ export default function CardCatalog(props) {
   }
 
   return (
-      !isLoading ?
+    <ScrollView>
+      {!isLoading ?
       <Container>
          {CardDisplay()}
       </Container> :
       <LoadingContainer>
         <ActivityIndicator size="large" color="#E65451" />
-      </LoadingContainer>
-  );
+      </LoadingContainer>}
+    </ScrollView>
+  )
 }

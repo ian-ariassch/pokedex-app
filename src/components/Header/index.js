@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 import SearchBar from './SearchBar';
 
 const StyledView = styled.View`
+  z-index: 10;
   display: flex;
   flex-direction: row;
   background-color: #E65451;

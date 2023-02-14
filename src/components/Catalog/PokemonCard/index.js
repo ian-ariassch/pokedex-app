@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { View, Image, Text } from 'react-native';
-import { Pressable } from '@react-native-material/core';
+import { useNavigation } from '@react-navigation/native';
 
 const CardContainer = styled.View`
   width: 100px;
@@ -23,7 +22,7 @@ const PokemonImageContainer = styled.View`
   height: 80%;
 `
 
-const PressableEffect = styled(Pressable)`
+const PressableEffect = styled.Pressable`
   width: 100%;
   height: 100%;
 `
@@ -49,9 +48,17 @@ const PokemonName = styled.Text`
 `
 
 export default function PokemonCard(props) {
+
+  const navigation = useNavigation();
+
+  const navigateToDetails = () => {
+    navigation.navigate('PokemonDetails', {name: props.name, image: props.image})
+  }
+
+
   return (
     <CardContainer>
-      <PressableEffect>
+      <PressableEffect onPress={navigateToDetails} android_ripple={{color: 'black', borderless: true}}>
       <PokemonImageContainer>
         <PokemonImage source={{ uri: props.image }} />
       </PokemonImageContainer>
