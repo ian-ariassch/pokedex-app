@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { View, Image, Text } from 'react-native';
+import { Pressable } from '@react-native-material/core';
 
 const CardContainer = styled.View`
   width: 100px;
@@ -20,6 +21,11 @@ const PokemonImageContainer = styled.View`
   align-items: center;
   width: 100%;
   height: 80%;
+`
+
+const PressableEffect = styled(Pressable)`
+  width: 100%;
+  height: 100%;
 `
 
 const PokemonImage = styled.Image`
@@ -45,7 +51,7 @@ const PokemonName = styled.Text`
 export default function PokemonCard(props) {
   return (
     <CardContainer>
-
+      <PressableEffect>
       <PokemonImageContainer>
         <PokemonImage source={{ uri: props.image }} />
       </PokemonImageContainer>
@@ -53,7 +59,7 @@ export default function PokemonCard(props) {
       <PokemonNameContainer>
         <PokemonName adjustsFontSizeToFit>{props.name}</PokemonName>
       </PokemonNameContainer>
-
+      </PressableEffect>
     </CardContainer>
   );
 }
