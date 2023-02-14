@@ -3,6 +3,8 @@ import PokemonCard  from './PokemonCard';
 import styled from 'styled-components/native';
 import axios from 'axios';
 import { SearchTermContext } from '../../contexts/SearchTerm';
+import { useQuery } from 'react-query';
+import { ActivityIndicator } from 'react-native';
 
 const Container = styled.View `
   display: flex;
@@ -15,36 +17,40 @@ const Container = styled.View `
   height: 85%;
 `
 
+const LoadingContainer = styled.View `
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+`
+
 const getPokemon = async () => {
-  const configurationObject = {
-    method: 'get',
-    url: 'https://pokeapi.co/api/v2/pokemon?limit=386',
-  };
-  const response = await axios(configurationObject);
+  const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=386')
 
-  const pokemon = response.data.results.map((pokemon, index) => {
-    return {
-      name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
-      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`
-    }
-  });
-
-  return pokemon
+  return res.data
 };
-
 
 export default function CardCatalog(props) {
 
-  const [pokemonCards, setPokemonCards] = useState([]);
+  const [displayedCards, setDisplayedCards] = useState([]);
 
   const [allPokemon, setAllPokemon] = useState([])
 
-  useEffect(() => {
-    getPokemon().then((pokemon) => {
-      setPokemonCards(pokemon)
+  const { data, isLoading, error } = useQuery('pokemon', getPokemon, {
+    onSuccess: (data) => {
+      const pokemon = data.results.map((pokemon, index) => {
+        return {
+          name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
+          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`
+        }
+      })
+      setDisplayedCards(pokemon)
+
       setAllPokemon(pokemon)
-    });
-  }, []);
+    }
+  }, {staleTime: 10 * 60 * 1000})
 
   const {searchTerm} = useContext(SearchTermContext)
 
@@ -62,18 +68,26 @@ export default function CardCatalog(props) {
         return lowerCaseName.includes(lowerCaseSearchTerm)
       })
 
-      setPokemonCards(filteredPokemon)
+      setDisplayedCards(filteredPokemon)
 
     } else {
-    setPokemonCards(allPokemon)
+      setDisplayedCards(allPokemon)
   } 
   }, [searchTerm]);
 
+  function CardDisplay(){
+    return displayedCards.map((pokemonCard, index) => {
+      return <PokemonCard key={index} name={pokemonCard.name} image={pokemonCard.image} />}
+    )
+  }
+
   return (
+      !isLoading ?
       <Container>
-        {pokemonCards.map((pokemonCard, index) => {
-          return <PokemonCard key={index} name={pokemonCard.name} image={pokemonCard.image} />
-        })}
-      </Container>
+         {CardDisplay()}
+      </Container> :
+      <LoadingContainer>
+        <ActivityIndicator size="large" color="#E65451" />
+      </LoadingContainer>
   );
 }

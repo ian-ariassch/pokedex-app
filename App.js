@@ -4,20 +4,20 @@ import Header from './src/components/Header';
 import styled from 'styled-components/native';
 import { SearchTermContext } from './src/contexts/SearchTerm';
 import { ScrollView } from 'react-native';
-
-const StyledView = styled.View`
-  background-color: #A3A3A3;
-`
+import { QueryClient, QueryClientProvider, ReactQueryDevtools } from 'react-query';
 
 const HeaderContainer = styled.View`
   z-index: 10;
 `
+
+const queryClient = new QueryClient();
 
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
 
   return(
+    <QueryClientProvider client={queryClient}>
     <SearchTermContext.Provider value={{searchTerm, setSearchTerm}}>
       <HeaderContainer>
         <Header/>
@@ -26,5 +26,6 @@ export default function App() {
         <CardCatalog/>
       </ScrollView>
     </SearchTermContext.Provider>
+    </QueryClientProvider>
   )
 }
