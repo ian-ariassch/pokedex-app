@@ -5,13 +5,18 @@ import axios from 'axios';
 import { SearchTermContext } from '../../contexts/SearchTerm';
 import { useQuery } from 'react-query';
 import { ActivityIndicator } from 'react-native';
-import { ScrollView } from 'react-native';
+import { useTheme } from 'react-native-paper';
+
+const StyledScrollView = styled.ScrollView`
+  background-color: ${({ theme }) => theme.colors.tertiary};
+  height: 100%;
+`
 
 const Container = styled.View `
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  background-color: #fff; 
+  background-color: ${({ theme }) => theme.colors.tertiary}; 
   align-content: flex-start; 
   justify-content: space-between;
   padding: 20px;
@@ -78,19 +83,19 @@ export default function CardCatalog(props) {
 
   function CardDisplay(){
     return displayedCards.map((pokemonCard, index) => {
-      return <PokemonCard key={index} name={pokemonCard.name} image={pokemonCard.image} />}
+      return <PokemonCard key={index} name={pokemonCard.name} image={pokemonCard.image} id={index+1}/>}
     )
   }
 
   return (
-    <ScrollView>
+    <StyledScrollView >
       {!isLoading ?
-      <Container>
+      <Container >
          {CardDisplay()}
       </Container> :
       <LoadingContainer>
-        <ActivityIndicator size="large" color="#E65451" />
+        <ActivityIndicator size="large" color="${({ theme }) => theme.colors.primary}" />
       </LoadingContainer>}
-    </ScrollView>
+    </StyledScrollView>
   )
 }

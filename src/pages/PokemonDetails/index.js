@@ -1,7 +1,12 @@
-import { Button } from '@react-native-material/core';
+import { Button } from 'react-native-paper';
 import React from 'react';
 import { View, Text } from 'react-native';
 import styled from 'styled-components/native';
+import MainDetails from '../../components/MainDetails';
+import PokemonTypes from '../../components/PokemonTypes';
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import { useState } from 'react';
 
 const navigateToHome = (navigation) => {
     navigation.navigate('Home')
@@ -16,71 +21,35 @@ const MainPageContainer = styled.View`
     width: 100%;
     height: 100%;
 `
-
-const MainImageContainer = styled.View`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 70%;
-`
-
-const MainImage = styled.Image`
-    width: 100%;
-    height: 100%;
-    max-width: 250px;
-    max-height: 250px;
-`
-
-const PokemonNameContainer = styled.View`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 30%;
-  background-color: #E65451;
-`
-
-const PokemonName = styled.Text`
-  text-align: center;
-  font-weight: bold;
-  font-size: 30px;
-`
-
-const MainDetailsContainer = styled.View`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    height: 30%;
-    margin: 10px;
-    margin-top: 20px;
-    background-color: #F6E8BE;
-    overflow: hidden;
-    border-radius: 10px;
-`
-
-{/* <StyledView>
-<View>
-    <Text>{route.params.name}</Text>
-</View>
-
-</StyledView> */}
+const getPokemonData = async (id) => {
+    const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}/`)
+  
+    return res.data
+  };
 
 export default function PokemonDetails({route, navigation})
 {
+    const {id, name, image} = route.params;
+
+    const [types, setTypes] = useState([])
+
+    const {data, isLoading, error} = useQuery(['pokemonType', id], () => getPokemonData(id), {
+        onSuccess: (data) => {
+            const types = data.types.map((type) => {
+                return type.type.name
+            })
+            setTypes(types)
+        }
+    }, {staleTime: 10 * 60 * 1000})
+
+
     return (
         <MainPageContainer>
-            <MainDetailsContainer>
-                <MainImageContainer>
-                    <MainImage source={{ uri: route.params.image }} />
-                </MainImageContainer>
-                <PokemonNameContainer>
-                    <PokemonName>{route.params.name}</PokemonName>
-                </PokemonNameContainer>
-            </MainDetailsContainer>
-            <Button onPress={() => navigateToHome(navigation)} title="Go back"/>
+            <MainDetails name={name} image={image}/>
+            <PokemonTypes types={types}/>
+            <Button onPress={() => navigateToHome(navigation)} mode="contained">
+                Back to Home
+            </Button>
         </MainPageContainer>
     )
 }

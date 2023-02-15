@@ -11,12 +11,13 @@ const StyledSearchBar = styled.View`
     `
 
 const StyledTextInput = styled.TextInput`
-    background-color: #fff;
+    background-color: ${({theme}) => theme.colors.tertiary};
     border-radius: 20px;
     padding: 10px;
     width: 95%;
     height: 40px;
     margin-top: 30px;
+    border-width: 2px;
 `
 
 export default function SearchBar() {

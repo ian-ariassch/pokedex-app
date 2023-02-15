@@ -9,8 +9,9 @@ const CardContainer = styled.View`
   display: flex;
   overflow: hidden;
   border-radius: 10px;
+  border-width: 2px;
   flex-grow: 1;
-  background-color: #F6E8BE;
+  background-color: ${({ theme }) => theme.colors.secondary};;
   margin: 5px;
 `
 
@@ -39,7 +40,9 @@ const PokemonNameContainer = styled.View`
   align-items: center;
   width: 100%;
   height: 20%;
-  background-color: #E65451;
+  background-color: ${({ theme }) => theme.colors.primary};
+  border-top-color: black;
+  border-top-width: 2px;
 `
 
 const PokemonName = styled.Text`
@@ -52,19 +55,19 @@ export default function PokemonCard(props) {
   const navigation = useNavigation();
 
   const navigateToDetails = () => {
-    navigation.navigate('PokemonDetails', {name: props.name, image: props.image})
+    navigation.navigate('PokemonDetails', {name: props.name, image: props.image, id: props.id})
   }
 
 
   return (
-    <CardContainer>
+    <CardContainer >
       <PressableEffect onPress={navigateToDetails} android_ripple={{color: 'black', borderless: true}}>
       <PokemonImageContainer>
         <PokemonImage source={{ uri: props.image }} />
       </PokemonImageContainer>
 
-      <PokemonNameContainer>
-        <PokemonName adjustsFontSizeToFit>{props.name}</PokemonName>
+      <PokemonNameContainer >
+        <PokemonName>{props.name}</PokemonName>
       </PokemonNameContainer>
       </PressableEffect>
     </CardContainer>
