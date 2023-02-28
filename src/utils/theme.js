@@ -1,5 +1,5 @@
-import { DefaultTheme } from "react-native-paper";
-import { configureFonts } from "react-native-paper";
+import { DefaultTheme } from "react-native-paper"
+import { configureFonts } from "react-native-paper"
 
 const theme = {
   ...DefaultTheme,
@@ -9,6 +9,6 @@ const theme = {
     secondary: "#d1d0cd",
     tertiary: "#fff",
   },
-};
+}
 
-export default theme;
+export default theme

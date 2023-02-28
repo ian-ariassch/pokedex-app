@@ -1,5 +1,5 @@
-import CardCatalog from "../../components/Catalog";
-import Header from "../../components/Header";
+import CardCatalog from "../../components/Catalog"
+import Header from "../../components/Header"
 
 export default function HomeScreen({ navigation }) {
   return (
@@ -7,5 +7,5 @@ export default function HomeScreen({ navigation }) {
       <Header />
       <CardCatalog />
     </>
-  );
+  )
 }

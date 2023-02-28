@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components/native";
-import { Text } from "react-native";
-import { pokemonTypeColors } from "../../utils/constants";
+import React from "react"
+import styled from "styled-components/native"
+import { Text } from "react-native"
+import { pokemonTypeColors } from "../../utils/constants"
 
 const PokemonTypesContainer = styled.View`
   display: flex;
@@ -16,7 +16,7 @@ const PokemonTypesContainer = styled.View`
   overflow: hidden;
   border-radius: 10px;
   border-width: 3px;
-`;
+`
 
 const StyledPokemonType = styled.View`
   display: flex;
@@ -30,29 +30,29 @@ const StyledPokemonType = styled.View`
   border-width: 2px;
   margin: 5px;
   flex-basis: 0;
-`;
+`
 
 function PokemonType(props) {
-  const backgroundColor = pokemonTypeColors[props.type];
+  const backgroundColor = pokemonTypeColors[props.type]
 
   const upperedCaseType =
-    props.type.charAt(0).toUpperCase() + props.type.slice(1);
+    props.type.charAt(0).toUpperCase() + props.type.slice(1)
 
   return (
     <StyledPokemonType style={{ backgroundColor }}>
       <Text>{upperedCaseType}</Text>
     </StyledPokemonType>
-  );
+  )
 }
 
 export default function PokemonTypes(props) {
-  const types = props.types;
+  const types = props.types
 
   return (
     <PokemonTypesContainer>
       {types.map((type, index) => {
-        return <PokemonType key={index} type={type} />;
+        return <PokemonType key={index} type={type} />
       })}
     </PokemonTypesContainer>
-  );
+  )
 }
