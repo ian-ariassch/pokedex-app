@@ -1,5 +1,4 @@
 import styled from "styled-components/native"
-import SearchBar from "./SearchBar"
 
 const StyledView = styled.View`
   z-index: 10;
@@ -12,10 +11,6 @@ const StyledView = styled.View`
   border-bottom-width: 2px;
 `
 
-export default function Header() {
-  return (
-    <StyledView>
-      <SearchBar />
-    </StyledView>
-  )
+export default function Header({ children }) {
+  return <StyledView>{children}</StyledView>
 }

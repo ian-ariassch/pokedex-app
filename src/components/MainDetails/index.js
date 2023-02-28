@@ -41,7 +41,6 @@ const MainDetailsContainer = styled.View`
   width: 100%;
   height: 30%;
   margin: 10px;
-  margin-top: 40px;
   background-color: ${({ theme }) => theme.colors.secondary};
   overflow: hidden;
   border-radius: 10px;
