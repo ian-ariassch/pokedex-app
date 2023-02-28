@@ -7,6 +7,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-native-paper';
 import { ThemeProvider } from 'styled-components/native';
+import { InstantSearch } from 'react-instantsearch-native';
+
+import algoliasearch from 'algoliasearch';
 import theme from './src/utils/theme';
 import * as Font from 'expo-font';
 
@@ -19,6 +22,11 @@ const fetchFonts = async () => {
     'PokemonClassic': require('./assets/fonts/PokemonClassic.ttf'),
   });
 };
+
+const searchClient = algoliasearch(
+  'LPZ0SL8MYP',
+  'bbdefe32bdb10c53f044c07e9daac7c1'
+);
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -36,19 +44,21 @@ export default function App() {
   }
 
   return(
+    <InstantSearch searchClient={searchClient} indexName="PokeDexApp">
       <Provider theme={theme}>
         <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <QueryClientProvider client={queryClient}>
-            <SearchTermContext.Provider value={{searchTerm, setSearchTerm}}>
-              <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Home" component={HomeScreen} />
-                <Stack.Screen name="PokemonDetails" component={PokemonDetails} />
-              </Stack.Navigator>
-            </SearchTermContext.Provider>
-          </QueryClientProvider>
-        </NavigationContainer>
+          <NavigationContainer>
+            <QueryClientProvider client={queryClient}>
+              <SearchTermContext.Provider value={{searchTerm, setSearchTerm}}>
+                <Stack.Navigator screenOptions={{headerShown: false}}>
+                  <Stack.Screen name="Home" component={HomeScreen} />
+                  <Stack.Screen name="PokemonDetails" component={PokemonDetails} />
+                </Stack.Navigator>
+              </SearchTermContext.Provider>
+            </QueryClientProvider>
+          </NavigationContainer>
         </ThemeProvider>
       </Provider>
+    </InstantSearch>
   )
 }

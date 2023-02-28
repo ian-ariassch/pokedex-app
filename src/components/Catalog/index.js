@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import PokemonCard  from './PokemonCard';
 import styled from 'styled-components/native';
 import axios from 'axios';
 import { SearchTermContext } from '../../contexts/SearchTerm';
 import { useQuery } from 'react-query';
 import { ActivityIndicator } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { connectHits } from 'react-instantsearch-native';
 
-const StyledScrollView = styled.ScrollView`
+const StyledFlatList = styled.FlatList`
   background-color: ${({ theme }) => theme.colors.tertiary};
   height: 100%;
 `
@@ -19,7 +19,6 @@ const Container = styled.View `
   background-color: ${({ theme }) => theme.colors.tertiary}; 
   align-content: flex-start; 
   justify-content: space-between;
-  padding: 20px;
   height: 85%;
 `
 
@@ -33,69 +32,85 @@ const LoadingContainer = styled.View `
 `
 
 const getPokemon = async () => {
-  const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=386')
+  const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=1008')
 
   return res.data
 };
 
-export default function CardCatalog(props) {
+const CardCatalog = ({ hits }) => {
 
-  const [displayedCards, setDisplayedCards] = useState([]);
+  const [displayedCards, setDisplayedCards] = useState([])
 
   const [allPokemon, setAllPokemon] = useState([])
 
+  const {searchTerm} = useContext(SearchTermContext)
+
   const { data, isLoading, error } = useQuery('pokemon', getPokemon, {
     onSuccess: (data) => {
-      const pokemon = data.results.map((pokemon, index) => {
-        return {
-          name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
-          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`
-        }
-      })
-      setDisplayedCards(pokemon)
+      let allPokemon = {}
+      
+      data.results.forEach((pokemon, index) => {
 
-      setAllPokemon(pokemon)
+        const pokemonName = pokemon.name
+
+        const pokemonId = index + 1
+
+        const pokemonImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`
+
+        allPokemon[pokemonName] = { id: pokemonId, image: pokemonImage };
+      })
+
+      setAllPokemon(allPokemon)
     }
   }, {staleTime: 10 * 60 * 1000})
 
-  const {searchTerm} = useContext(SearchTermContext)
+  function FilteredCardDisplay(){
+    const hitsPokemonNames = hits.map((pokemon) => pokemon.name)
 
-  useEffect(() => {
-    if(allPokemon.length === 0) {
-      return
-    }
+    return hitsPokemonNames.map((pokemonName, index) => {
+      const pokemonData = allPokemon[pokemonName]
 
-    if(searchTerm) {
-      const filteredPokemon = allPokemon.filter((pokemon) => {
-        const lowerCaseName = pokemon.name.toLowerCase()
-
-        const lowerCaseSearchTerm = searchTerm.toLowerCase()
-
-        return lowerCaseName.includes(lowerCaseSearchTerm)
-      })
-
-      setDisplayedCards(filteredPokemon)
-
-    } else {
-      setDisplayedCards(allPokemon)
-  } 
-  }, [searchTerm]);
-
-  function CardDisplay(){
-    return displayedCards.map((pokemonCard, index) => {
-      return <PokemonCard key={index} name={pokemonCard.name} image={pokemonCard.image} id={index+1}/>}
-    )
+      if(pokemonData)
+      return <PokemonCard key={index} name={pokemonName} image={pokemonData.image} id={pokemonData.id}/>
+    })
   }
 
+  useEffect(() => {
+    if(searchTerm){
+      setDisplayedCards(FilteredCardDisplay())
+    }
+    else{
+      setDisplayedCards(allMemoPokemon)
+    }
+  }, [allPokemon, hits])
+
+  const allMemoPokemon = useMemo(() => {
+      return Object.keys(allPokemon).map((pokemonName, index) => {
+        const pokemonData = allPokemon[pokemonName];
+        return <PokemonCard key={index} name={pokemonName} image={pokemonData.image} id={pokemonData.id}/>
+  })
+  }, [allPokemon])
+
   return (
-    <StyledScrollView >
-      {!isLoading ?
-      <Container >
-         {CardDisplay()}
-      </Container> :
+    <>
+    {isLoading ?
+      
       <LoadingContainer>
-        <ActivityIndicator size="large" color="${({ theme }) => theme.colors.primary}" />
-      </LoadingContainer>}
-    </StyledScrollView>
+          <ActivityIndicator size="large" color="${({ theme }) => theme.colors.primary}" />
+      </LoadingContainer> 
+      
+      :
+      <Container>
+        <StyledFlatList
+          data={displayedCards}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => item}
+          numColumns={3}
+        />
+      </Container>
+    }
+    </>
   )
 }
+
+export default connectHits(CardCatalog);

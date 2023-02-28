@@ -58,6 +58,8 @@ export default function PokemonCard(props) {
     navigation.navigate('PokemonDetails', {name: props.name, image: props.image, id: props.id})
   }
 
+  const capitalizedName = props.name.charAt(0).toUpperCase() + props.name.slice(1);
+
 
   return (
     <CardContainer >
@@ -67,7 +69,7 @@ export default function PokemonCard(props) {
       </PokemonImageContainer>
 
       <PokemonNameContainer >
-        <PokemonName>{props.name}</PokemonName>
+        <PokemonName>{capitalizedName}</PokemonName>
       </PokemonNameContainer>
       </PressableEffect>
     </CardContainer>

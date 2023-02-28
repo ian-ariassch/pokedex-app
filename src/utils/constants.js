@@ -19,3 +19,5 @@ export const pokemonTypeColors = {
     rock: '#B8A038',
     steel: '#B8B8D0',
 };
+
+export const POKEMON_PAGE_LIMIT = 30;

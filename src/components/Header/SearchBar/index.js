@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components/native';
 import { SearchTermContext } from '../../../contexts/SearchTerm';
+import { connectSearchBox } from 'react-instantsearch-native';
 
 const StyledSearchBar = styled.View`
     display: flex;
@@ -20,8 +21,8 @@ const StyledTextInput = styled.TextInput`
     border-width: 2px;
 `
 
-export default function SearchBar() {
-  const {searchTerm, setSearchTerm} = useContext(SearchTermContext);
+const SearchBar = ({currentRefinement, refine}) => {
+  const {setSearchTerm} = useContext(SearchTermContext);
 
   const handleChange = (text) => {
     setSearchTerm(text);
@@ -31,9 +32,11 @@ export default function SearchBar() {
     <StyledSearchBar>
       <StyledTextInput 
         placeholder="Pokemon Name"
-        value={searchTerm}
-        onChangeText={handleChange}
+        value={currentRefinement}
+        onChangeText={value => {refine(value); handleChange(value);}}
       />
     </StyledSearchBar>
   );
-}
+};
+
+export default connectSearchBox(SearchBar);
