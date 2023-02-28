@@ -19,7 +19,7 @@ const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.tertiary};
   align-content: flex-start;
   justify-content: space-between;
-  height: 85%;
+  height: 100%;
 `
 
 const LoadingContainer = styled.View`
